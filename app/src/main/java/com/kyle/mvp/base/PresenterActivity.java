@@ -1,7 +1,5 @@
 package com.kyle.mvp.base;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +22,6 @@ public abstract class PresenterActivity<V extends IView, M> extends AppCompatAct
 
     protected V v;
     protected M m;
-
-    private Dialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,19 +55,6 @@ public abstract class PresenterActivity<V extends IView, M> extends AppCompatAct
      * @param savedInstanceState
      */
     protected void afterCreate(Bundle savedInstanceState) {
-    }
-
-    protected void showProgress() {
-        dismissProgress();
-        progressDialog = new ProgressDialog(this);
-        progressDialog.show();
-    }
-
-    protected void dismissProgress() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
     }
 
     @Override

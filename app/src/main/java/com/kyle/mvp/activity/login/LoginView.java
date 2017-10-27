@@ -5,8 +5,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.kyle.mvp.R;
+import com.kyle.mvp.base.BaseView;
 import com.kyle.mvp.base.IPresenter;
-import com.kyle.mvp.base.IView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
  * @Author作者: Kyle
  * @Date日期: 2017/10/12
  */
-public class LoginView implements IView {
+public class LoginView extends BaseView {
 
     @BindView(R.id.et_account)
     EditText etAccount;
