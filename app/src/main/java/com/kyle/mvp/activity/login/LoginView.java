@@ -6,10 +6,8 @@ import android.widget.EditText;
 
 import com.kyle.mvp.R;
 import com.kyle.mvp.base.BaseView;
-import com.kyle.mvp.base.IPresenter;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @Description描述:View 的职责主要是渲染UI，控制动画
@@ -25,9 +23,12 @@ public class LoginView extends BaseView {
     @BindView(R.id.btn_login)
     Button btnLogin;
 
-    @Override
-    public void attachView(IPresenter presenter, View view) {
-        ButterKnife.bind(this, view);
+    public LoginView(View view) {
+        super(view);
+    }
+
+    public void setAccount(String account){
+        etAccount.setText(account);
     }
 
     public String getAccount() {
@@ -36,6 +37,10 @@ public class LoginView extends BaseView {
 
     public String getPwd() {
         return etPwd.getText().toString().trim();
+    }
+
+    public void setPwd(String pwd){
+        etPwd.setText(pwd);
     }
 
 }

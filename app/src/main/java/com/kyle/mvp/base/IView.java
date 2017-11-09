@@ -1,20 +1,18 @@
 package com.kyle.mvp.base;
 
-import android.content.DialogInterface;
-import android.view.View;
-
 /**
- * @Description描述:
+ * @Description描述: View层用于显示数据，获取用户的交互事件然后传递到presenter中
  * @Author作者: Kyle
  * @Date日期: 2017/10/12
  */
 public interface IView {
 
     /**
+     * 依附Presenter
+     *
      * @param presenter
-     * @param view
      */
-    void attachView(IPresenter presenter, View view);
+    void setPresenter(IPresenter presenter);
 
     /**
      * Toast提示
@@ -23,14 +21,6 @@ public interface IView {
      */
     void showToast(CharSequence text);
 
-    /**
-     * 醒目提示框
-     *
-     * @param text          提示文本
-     * @param actionName    按钮名称
-     * @param clickListener
-     */
-    void showNoticeDialog(CharSequence text, CharSequence actionName, DialogInterface.OnClickListener clickListener);
 
     /**
      * 显示加载框

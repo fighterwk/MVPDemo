@@ -1,34 +1,22 @@
 package com.kyle.mvp.activity.login;
 
-import com.google.gson.Gson;
-
-import java.util.Map;
+import com.kyle.mvp.base.ApiModel;
+import com.kyle.mvp.bean.GitBean;
+import com.kyle.mvp.net.CallbackWrapper;
+import com.kyle.mvp.net.RequestCallback;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.QueryMap;
-import retrofit2.http.Url;
 
 /**
- * @Description描述:
+ * @Description描述: 这里相当于是做了一个数据的桥接.有点像代理模式中的代理
  * @Author作者: Kyle
  * @Date日期: 2017/10/12
  */
-public interface LoginModel {
+public class LoginModel extends ApiModel {
 
-    @POST("user")
-    @FormUrlEncoded
-    Call<Gson> login(@Field(value = "account") String account, @Field("password") String password);
-
-
-    @POST
-    @FormUrlEncoded
-    Call<Gson> post(@Url String url, @FieldMap Map<String, String> params);
-
-    @GET
-    Call<Gson> get(@Url String url, @QueryMap Map<String, String> params);
+    public Call<GitBean> login(String account, String password, RequestCallback<GitBean> callback) {
+        Call<GitBean> call = request(getCommonApi().login(account, password),
+                new CallbackWrapper<GitBean>(callback));
+        return call;
+    }
 }

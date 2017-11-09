@@ -4,18 +4,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kyle.mvp.R;
 import com.kyle.mvp.annotion.Layout;
-import com.kyle.mvp.base.IView;
 import com.kyle.mvp.base.PresenterActivity;
-
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
+import com.kyle.mvp.bean.GitBean;
+import com.kyle.mvp.net.RequestCallback;
 
 import butterknife.OnClick;
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * @Description描述:
@@ -25,8 +21,7 @@ import retrofit2.Response;
 @Layout(layoutResId = R.layout.activity_login)
 public class LoginActivity extends PresenterActivity<LoginView, LoginModel> {
 
-    ReferenceQueue<Call> callReferenceQueue;
-
+    Call requestCall;
 
     @OnClick(R.id.btn_login)
     public void onLoginClicked(View v) {
@@ -35,59 +30,44 @@ public class LoginActivity extends PresenterActivity<LoginView, LoginModel> {
 
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(pwd)) {
             Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_SHORT).show();
+            getView().setAccount("11");
+            getView().setPwd("111");
             return;
         }
 
 
         // model
-        enqueueCall(this.m.login(account, pwd));
+        Call<GitBean> requestCall = getModel().login(getView().getAccount(),
+                getView().getPwd(), new RequestCallback<GitBean>() {
+                    @Override
+                    public void onStart() {
+                        getView().showLoadingDialog();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        getView().dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void onSuccess(GitBean bean) {
+                        getView().showToast("登录成功:" + bean);
+                    }
+
+                    @Override
+                    public void onFail(Throwable e) {
+                        getView().showToast("登录失败:" + e.getMessage());
+                    }
+                });
+        this.requestCall = requestCall;
     }
 
-
-    protected void enqueueCall(Call call) {
-        RequestCallback requestCallback = new RequestCallback(this.v);
-        requestCallback.onStart();
-        call.enqueue(requestCallback);
-    }
-
-    // P
-    private static class RequestCallback extends com.kyle.mvp.net.RequestCallback<Gson> {
-        WeakReference<IView> view;
-
-        public RequestCallback(IView view) {
-            this.view = new WeakReference<>(view);
-        }
-
-        @Override
-        public void onStart() {
-            if (view.get() != null) {
-                view.get().showLoadingDialog();
-            }
-        }
-
-        @Override
-        public void onComplete() {
-            if (view.get() != null) {
-                view.get().dismissLoadingDialog();
-            }
-        }
-
-        @Override
-        public void onResponse(Call<Gson> call, Response<Gson> response) {
-            super.onResponse(call, response);
-            if (view.get() != null) {
-                view.get().showToast("登录成功");
-            }
-        }
-
-        @Override
-        public void onFailure(Call<Gson> call, Throwable t) {
-            super.onFailure(call, t);
-            if (view.get() != null) {
-                view.get().showToast("登录失败");
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (requestCall != null && !requestCall.isCanceled()) {
+            requestCall.cancel();
+            requestCall = null;
         }
     }
-
-
 }

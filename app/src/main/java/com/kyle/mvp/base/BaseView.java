@@ -9,8 +9,10 @@ import android.widget.Toast;
 import com.kyle.mvp.BaseApplication;
 import com.kyle.mvp.util.DialogUtil;
 
+import butterknife.ButterKnife;
+
 /**
- * @Description描述:
+ * @Description描述: android View 层
  * @Author作者: Kyle
  * @Date日期: 2017/10/26
  */
@@ -19,20 +21,32 @@ public class BaseView implements IView {
     private Dialog loadingDialog;
     protected Context mContext;
     protected IPresenter mPresenter;
+    protected View rootView;
 
+    public BaseView(View view) {
+        this.rootView = view;
+        this.mContext = this.rootView.getContext();
+        ButterKnife.bind(this, view);
+    }
 
     @Override
-    public void attachView(IPresenter presenter, View view) {
+    public void setPresenter(IPresenter presenter) {
         this.mPresenter = presenter;
-        this.mContext = view.getContext();
     }
 
     @Override
     public void showToast(CharSequence text) {
-        Toast.makeText(BaseApplication.getInstance(), text, Toast.LENGTH_LONG);
+        Toast.makeText(BaseApplication.getInstance(), text, Toast.LENGTH_LONG).show();
     }
 
-    @Override
+
+    /**
+     * 醒目提示框
+     *
+     * @param text          提示文本
+     * @param actionName    按钮名称
+     * @param clickListener
+     */
     public void showNoticeDialog(CharSequence text, CharSequence actionName,
                                  DialogInterface.OnClickListener clickListener) {
         DialogUtil.showNoticeDialog(mContext, text, actionName, clickListener);

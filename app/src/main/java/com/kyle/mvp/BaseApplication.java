@@ -48,6 +48,7 @@ public class BaseApplication extends Application {
     private Retrofit createRetrofit() {
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder();
         retrofitBuilder.baseUrl("https://api.github.com");
+//        retrofitBuilder.baseUrl("http://apiotc-test.jkbat.cn");
         retrofitBuilder.addConverterFactory(GsonConverterFactory.create());
         retrofitBuilder.client(createHttpClient());
 
